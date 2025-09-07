@@ -380,7 +380,7 @@ void PedestrianSFMRandomPlugin::OnUpdate(const common::UpdateInfo &_info)
   double distanceTraveled =
     (actorPose.Pos() - this->actor->WorldPose().Pos()).Length();
 
-  this->actor->SetWorldPose(actorPose, false, false);
+  this->actor->SetWorldPose(actorPose, true, false);
   this->actor->SetScriptTime(
     this->actor->ScriptTime() +
      (distanceTraveled * this->animationFactor));
