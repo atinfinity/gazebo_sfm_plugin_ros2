@@ -26,7 +26,7 @@
 
 //#include <ignition/math.hh>
 //#include <ignition/math/gzmath.hh>
-#include <gazebo_classic_sfm_plugin_ros2/PedestrianSFMRandomPlugin.h>
+#include "gazebo_classic_sfm_plugin_ros2/PedestrianSFMRandomPlugin.h"
 
 using namespace gazebo;
 GZ_REGISTER_MODEL_PLUGIN(PedestrianSFMRandomPlugin)

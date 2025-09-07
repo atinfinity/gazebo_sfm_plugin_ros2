@@ -63,4 +63,21 @@ install(TARGETS ${attach_model_plugin_name}
   RUNTIME DESTINATION bin
 )
 
+# Create the libCollisionActorPlugin.so library.
+set(collision_actor_plugin_name CollisionActorPlugin)
+add_library(${collision_actor_plugin_name} SHARED
+  src/CollisionActorPlugin.cc
+)
+target_link_libraries(${collision_actor_plugin_name}
+  ${GAZEBO_LIBRARIES}
+)
+# add_dependencies(${collision_actor_plugin_name}
+#   ${PROJECT_NAME}_generate_messages_cpp
+# )
+install(TARGETS ${collision_actor_plugin_name}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
 ament_package()

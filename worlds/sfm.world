@@ -20,7 +20,6 @@
       </attenuation>
       <direction>0 0.5 -0.9</direction>
     </light>
-
     <light name="point_light" type="point">
       <pose>0 -0.377195 6.59868 0 -0 0</pose>
       <diffuse>0.784314 0.784314 0.784314 1</diffuse>
@@ -34,7 +33,7 @@
       <cast_shadows>0</cast_shadows>
       <direction>0 0 -1</direction>
     </light>
-
+    <!-- actor 1: simple collision model -->
     <model name="actor1_collision_model">
       <pose>0 0 0 0 0 0</pose>
       <static>true</static>
@@ -59,9 +58,8 @@
         </visual> -->
       </link>
     </model>
-
     <actor name="actor1">
-      <pose>-1 2 1.25 0 0 0</pose>
+      <pose>0 3 1.25 0 0 0</pose>
       <skin>
         <filename>walk.dae</filename>
         <scale>1.0</scale>
@@ -71,16 +69,14 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-
       <plugin name="actor1_plugin" filename="libPedestrianSFMRandomPlugin.so">
         <velocity>1.00</velocity>
         <radius>0.4</radius>
         <animation_factor>5.1</animation_factor>
         <people_distance>6.0</people_distance>
-        <!-- weights -->
         <goal_weight>2.0</goal_weight>
-        <obstacle_weight>80.0</obstacle_weight> <!--10.0-->
-        <social_weight>15</social_weight> <!--2.1-->
+        <obstacle_weight>80.0</obstacle_weight>
+        <social_weight>15</social_weight>
         <group_gaze_weight>3.0</group_gaze_weight>
         <group_coh_weight>2.0</group_coh_weight>
         <group_rep_weight>1.0</group_rep_weight>
@@ -90,17 +86,17 @@
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
-          <waypoint>-1 2 1.25</waypoint>
-          <waypoint>-1 -8 1.25</waypoint>
+          <waypoint>0 3 1.25</waypoint>
+          <waypoint>0 -3 1.25</waypoint>
         </trajectory>
         <!-- <random_trajectory>
-          <steps>10</steps> -->
-          <!-- <seed>6723872</seed> -->
-          <!-- <origin>10.0 0.0 0.0</origin>
-          <rx>11.0</rx><ry>6.0</ry>
+          <steps>10</steps>
+          <seed>6723872</seed>
+          <origin>10.0 0.0 0.0</origin>
+          <rx>11.0</rx>
+          <ry>6.0</ry>
         </random_trajectory> -->
       </plugin>
-
       <plugin name="attach_model1" filename="libAttachModelPlugin.so">
         <link>
           <link_name>actor1_pose</link_name>
@@ -110,34 +106,9 @@
         </link>
       </plugin>
     </actor>
-
-<model name="actor2_collision_model">
-      <pose>0 0 0 0 0 0</pose>
-      <static>true</static>
-      <link name="link">
-        <collision name="link">
-          <pose>0 -0.18 0.00 1.57 0 0</pose>
-          <geometry>
-            <cylinder>
-              <radius>0.3</radius>
-              <length>1.8</length>
-            </cylinder>
-          </geometry>
-        </collision>
-        <!-- <visual name="link">
-          <pose>0 -0.18 0.00 1.57 0 0</pose>
-          <geometry>
-            <cylinder>
-              <radius>0.3</radius>
-              <length>1.8</length>
-            </cylinder>
-          </geometry>
-        </visual> -->
-      </link>
-    </model>
-
+    <!-- actor 2: detailed collision model -->
     <actor name="actor2">
-      <pose>2 -1 1.25 0 0 0</pose>
+      <pose>0 -3 1.25 0 0 0</pose>
       <skin>
         <filename>walk.dae</filename>
         <scale>1.0</scale>
@@ -147,46 +118,96 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-
       <plugin name="actor2_plugin" filename="libPedestrianSFMRandomPlugin.so">
         <velocity>1.00</velocity>
         <radius>0.4</radius>
         <animation_factor>5.1</animation_factor>
         <people_distance>6.0</people_distance>
-        <!-- weights -->
         <goal_weight>2.0</goal_weight>
-        <obstacle_weight>80.0</obstacle_weight> <!--10.0-->
-        <social_weight>15</social_weight> <!--2.1-->
+        <obstacle_weight>80.0</obstacle_weight>
+        <social_weight>15</social_weight>
         <group_gaze_weight>3.0</group_gaze_weight>
         <group_coh_weight>2.0</group_coh_weight>
         <group_rep_weight>1.0</group_rep_weight>
         <ignore_obstacles>
           <model>ground_plane</model>
-          <model>actor2_collision_model</model>
+          <model>actor2</model>
         </ignore_obstacles>
-        <!-- <trajectory>
+        <trajectory>
           <cyclic>true</cyclic>
-          <waypoint>2 -1 1.25</waypoint>
-          <waypoint>-8 -1  1.25</waypoint>
-        </trajectory> -->
-        <random_trajectory>
+          <waypoint>0 -3 1.25</waypoint>
+          <waypoint>0 3 1.25</waypoint>
+        </trajectory>
+        <!-- <random_trajectory>
           <steps>10</steps>
           <seed>6723872</seed>
           <origin>2 -1 0.0</origin>
           <rx>10.0</rx>
           <ry>10.0</ry>
-        </random_trajectory>
+        </random_trajectory> -->
       </plugin>
-
-      <plugin name="attach_model2" filename="libAttachModelPlugin.so">
-        <link>
-          <link_name>actor2_pose</link_name>
-          <model>
-            <model_name>actor2_collision_model</model_name>
-          </model>
-        </link>
+      <!-- <plugin name="actor_collisions_plugin" filename="libCollisionActorPlugin.so">
+        <scaling collision="LHipJoint_LeftUpLeg_collision" scale="0.01 0.001 0.001"/>
+        <scaling collision="LeftUpLeg_LeftLeg_collision" scale="8.0 8.0 1.0"/>
+        <scaling collision="LeftLeg_LeftFoot_collision" scale="8.0 8.0 1.0"/>
+        <scaling collision="LeftFoot_LeftToeBase_collision" scale="4.0 4.0 1.5"/>
+        <scaling collision="RHipJoint_RightUpLeg_collision" scale="0.01 0.001 0.001"/>
+        <scaling collision="RightUpLeg_RightLeg_collision" scale="8.0 8.0 1.0"/>
+        <scaling collision="RightLeg_RightFoot_collision" scale="8.0 8.0 1.0"/>
+        <scaling collision="RightFoot_RightToeBase_collision" scale="4.0 4.0 1.5"/>
+        <scaling collision="LowerBack_Spine_collision" scale="12.0 20.0 5.0" pose="0.05 0 0 0 -0.2 0"/>
+        <scaling collision="Spine_Spine1_collision" scale="0.01 0.001 0.001"/>
+        <scaling collision="Neck_Neck1_collision" scale="0.01 0.001 0.001"/>
+        <scaling collision="Neck1_Head_collision" scale="5.0 5.0 3.0"/>
+        <scaling collision="LeftShoulder_LeftArm_collision" scale="0.01 0.001 0.001"/>
+        <scaling collision="LeftArm_LeftForeArm_collision" scale="5.0 5.0 1.0"/>
+        <scaling collision="LeftForeArm_LeftHand_collision" scale="5.0 5.0 1.0"/>
+        <scaling collision="LeftFingerBase_LeftHandIndex1_collision" scale="4.0 4.0 3.0"/>
+        <scaling collision="RightShoulder_RightArm_collision" scale="0.01 0.001 0.001"/>
+        <scaling collision="RightArm_RightForeArm_collision" scale="5.0 5.0 1.0"/>
+        <scaling collision="RightForeArm_RightHand_collision" scale="5.0 5.0 1.0"/>
+        <scaling collision="RightFingerBase_RightHandIndex1_collision" scale="4.0 4.0 3.0"/>
+      </plugin> -->
+    </actor>
+    <!-- actor 3: no collision model -->
+    <actor name="actor3">
+      <pose>-3 0 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor3_plugin" filename="libPedestrianSFMRandomPlugin.so">
+        <velocity>1.00</velocity>
+        <radius>0.4</radius>
+        <animation_factor>5.1</animation_factor>
+        <people_distance>6.0</people_distance>
+        <goal_weight>2.0</goal_weight>
+        <obstacle_weight>80.0</obstacle_weight>
+        <social_weight>15</social_weight>
+        <group_gaze_weight>3.0</group_gaze_weight>
+        <group_coh_weight>2.0</group_coh_weight>
+        <group_rep_weight>1.0</group_rep_weight>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>-3 0 1.25</waypoint>
+          <waypoint>3 0 1.25</waypoint>
+        </trajectory>
+        <!-- <random_trajectory>
+          <steps>10</steps>
+          <seed>6723872</seed>
+          <origin>2 -1 0.0</origin>
+          <rx>10.0</rx>
+          <ry>10.0</ry>
+        </random_trajectory> -->
       </plugin>
     </actor>
-
   </world>
 </sdf>
