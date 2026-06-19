@@ -4,9 +4,7 @@
   <img src="assets/demo.gif">
 </p>
 
-Social Force Model (SFM) pedestrian plugins for **Gazebo Ignition** and **ROS 2**, with LiDAR-detectable collisions. The persons are affected by the obstacles and other persons using the [Social Force Model](https://github.com/robotics-upo/lightsfm).
-
-
+Social Force Model (SFM) pedestrian plugins for **Gazebo Ignition** and **ROS 2**, with LiDAR-detectable collisions. The persons are affected by the obstacles and other persons using the [Social Force Model](https://github.com/robotics-upo/lightsfm). This package was ported from [gazebo_classic_sfm_plugin_ros2](https://github.com/ZhanyuGuo/gazebo_classic_sfm_plugin_ros2).
 
 > [!NOTE]
 > Originally written for Gazebo Classic (Gazebo 11) + ROS 2 Humble, this package has
@@ -15,6 +13,9 @@ Social Force Model (SFM) pedestrian plugins for **Gazebo Ignition** and **ROS 2*
 > Because actors in the new Gazebo are visual-only, each pedestrian optionally drags
 > a **kinematic collision cylinder** (via `AttachModelPlugin`) so it can be sensed by
 > a LiDAR. The old `CollisionActorPlugin` (skeleton-link collisions) is no longer used.
+
+> [!NOTE]
+> The **lightsfm** is placed in [include/lightsfm](include/lightsfm).
 
 ## Supported Versions
 
