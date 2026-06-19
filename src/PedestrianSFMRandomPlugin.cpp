@@ -1,6 +1,6 @@
 /***********************************************************************/
 /**                                                                    */
-/** PedestrianSFMRandomPlugin.cpp                                       */
+/** PedestrianSFMRandomPlugin.cpp                                      */
 /**                                                                    */
 /** Copyright (c) 2021, Service Robotics Lab (SRL).                    */
 /**                     http://robotics.upo.es                         */
@@ -8,8 +8,16 @@
 /** All rights reserved.                                               */
 /**                                                                    */
 /** Authors:                                                           */
-/** Noé Pérez-Higueras (maintainer)                                    */
+/** Noé Pérez-Higueras (original maintainer)                           */
 /** email: noeperez@upo.es                                             */
+/**                                                                    */
+/** Copyright (c) 2026, atinfinity                                     */
+/**                                                                    */
+/** All rights reserved.                                               */
+/**                                                                    */
+/** Authors:                                                           */
+/** atinfinity (maintainer)                                            */
+/** email: dandelion1124@gmail.com                                     */
 /**                                                                    */
 /** This software may be modified and distributed under the terms      */
 /** of the BSD license. See the LICENSE file for details.              */
