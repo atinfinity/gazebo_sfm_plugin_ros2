@@ -1,6 +1,6 @@
 /***********************************************************************/
 /**                                                                    */
-/** PedestrianSFMPlugin.h                                              */
+/** PedestrianSFMRandomPlugin.h                                         */
 /**                                                                    */
 /** Copyright (c) 2021, Service Robotics Lab (SRL).                    */
 /**                     http://robotics.upo.es                         */
@@ -16,113 +16,103 @@
 /**                                                                    */
 /** http://www.opensource.org/licenses/BSD-3-Clause                    */
 /**                                                                    */
+/** Ported to Gazebo Harmonic (gz-sim8) / ROS 2 Jazzy.                 */
+/**                                                                    */
 /***********************************************************************/
 
-#ifndef GAZEBO_PLUGINS_PEDESTRIANSFMPLUGIN_HH_
-#define GAZEBO_PLUGINS_PEDESTRIANSFMPLUGIN_HH_
+#ifndef GAZEBO_SFM_PLUGIN_ROS2_PEDESTRIANSFMRANDOMPLUGIN_H_
+#define GAZEBO_SFM_PLUGIN_ROS2_PEDESTRIANSFMRANDOMPLUGIN_H_
 
 // C++
+#include <chrono>
+#include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 #include <algorithm>
 
-// Gazebo
-#include <gazebo/common/Plugin.hh>
-#include <gazebo/physics/physics.hh>
-#include <gazebo/util/system.hh>
+// gz-sim
+#include <gz/sim/System.hh>
+#include <gz/sim/Entity.hh>
+#include <gz/math/Pose3.hh>
+#include <sdf/Element.hh>
 
 // Social Force Model
 #include "lightsfm/sfm.hpp"
 
-namespace gazebo
+namespace gazebo_sfm_plugin_ros2
 {
-  class GZ_PLUGIN_VISIBLE PedestrianSFMRandomPlugin : public ModelPlugin
+  /// \brief Drives a gz-sim actor along Social-Force-Model trajectories.
+  ///
+  /// This is the Gazebo Harmonic (gz-sim8) port of the original Gazebo Classic
+  /// ModelPlugin. The actor's world pose is driven through the
+  /// components::TrajectoryPose component and its walking animation through
+  /// components::AnimationTime / components::AnimationName.
+  class PedestrianSFMRandomPlugin
+      : public gz::sim::System,
+        public gz::sim::ISystemConfigure,
+        public gz::sim::ISystemPreUpdate
   {
-  /// \brief Constructor
-  public:
-    PedestrianSFMRandomPlugin();
+    /// \brief Constructor
+    public: PedestrianSFMRandomPlugin();
 
-    /// \brief Load the actor plugin.
-    /// \param[in] _model Pointer to the parent model.
-    /// \param[in] _sdf Pointer to the plugin's SDF elements.
-  public:
-    virtual void Load(physics::ModelPtr _model, sdf::ElementPtr _sdf);
+    /// \brief Destructor
+    public: ~PedestrianSFMRandomPlugin() override = default;
 
-    // Documentation Inherited.
-  public:
-    virtual void Reset();
+    // Documentation inherited
+    public: void Configure(const gz::sim::Entity &_entity,
+                const std::shared_ptr<const sdf::Element> &_sdf,
+                gz::sim::EntityComponentManager &_ecm,
+                gz::sim::EventManager &_eventMgr) override;
 
-    /// \brief Function that is called every update cycle.
-    /// \param[in] _info Timing information
-  private:
-    void OnUpdate(const common::UpdateInfo &_info);
+    // Documentation inherited
+    public: void PreUpdate(const gz::sim::UpdateInfo &_info,
+                gz::sim::EntityComponentManager &_ecm) override;
 
-
-    // private: void InitializePedestrians();
+    /// \brief Initialize SFM goals and animation (called from Configure).
+    private: void Reset(gz::sim::EntityComponentManager &_ecm);
 
     /// \brief Helper function to detect the closest obstacles.
-  private:
-    void HandleObstacles();
+    private: void HandleObstacles(gz::sim::EntityComponentManager &_ecm,
+                 const gz::math::Pose3d &_actorPose);
 
     /// \brief Helper function to detect the nearby pedestrians (other actors).
-  private:
-    void HandlePedestrians();
+    private: void HandlePedestrians(gz::sim::EntityComponentManager &_ecm,
+                 const gz::math::Pose3d &_actorPose, double _dt);
 
+    /// \brief Entity of the controlled actor.
+    private: gz::sim::Entity actorEntity{gz::sim::kNullEntity};
 
-  //-------------------------------------------------
-
-    /// \brief this actor as a SFM agent
-  private:
-    sfm::Agent sfmActor;
+    /// \brief this actor as a SFM agent.
+    private: sfm::Agent sfmActor;
 
     /// \brief names of the other models in my walking group.
-  private:
-    std::vector<std::string> groupNames;
+    private: std::vector<std::string> groupNames;
 
     /// \brief vector of pedestrians detected.
-  private:
-    std::vector<sfm::Agent> otherActors;
+    private: std::vector<sfm::Agent> otherActors;
 
     /// \brief Maximum distance to detect nearby pedestrians.
-  private:
-    double peopleDistance;
-
-    /// \brief Pointer to the parent actor.
-  private:
-    physics::ActorPtr actor;
-
-    /// \brief Pointer to the world, for convenience.
-  private:
-    physics::WorldPtr world;
+    private: double peopleDistance{5.0};
 
     /// \brief Pointer to the sdf element.
-  private:
-    sdf::ElementPtr sdf;
-
-    /// \brief Velocity of the actor
-  private:
-    ignition::math::Vector3d velocity;
-
-    /// \brief List of connections
-  private:
-    std::vector<event::ConnectionPtr> connections;
+    private: std::shared_ptr<const sdf::Element> sdf;
 
     /// \brief Time scaling factor. Used to coordinate translational motion
     /// with the actor's walking animation.
-  private:
-    double animationFactor = 1.0;
+    private: double animationFactor{1.0};
+
+    /// \brief Name of the skeleton animation to play.
+    private: std::string animationName{"walking"};
 
     /// \brief Time of the last update.
-  private:
-    common::Time lastUpdate;
+    private: std::chrono::steady_clock::duration lastUpdate{0};
 
-    /// \brief List of models to ignore. Used for vector field
-  private:
-    std::vector<std::string> ignoreModels;
+    /// \brief List of models to ignore as obstacles.
+    private: std::vector<std::string> ignoreModels;
 
-    /// \brief Custom trajectory info.
-  private:
-    physics::TrajectoryInfoPtr trajectoryInfo;
+    /// \brief Last known world poses of other actors, to estimate velocity.
+    private: std::unordered_map<gz::sim::Entity, gz::math::Pose3d> lastPoses;
   };
-}
+}  // namespace gazebo_sfm_plugin_ros2
 #endif
