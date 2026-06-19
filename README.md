@@ -1,12 +1,14 @@
-# Gazebo SFM Plugin for ROS 2 (Harmonic)
+# Gazebo SFM Plugin for ROS 2 (Gazebo Ignition)
 
 <p align="center">
   <img src="assets/demo.gif">
 </p>
 
-Social Force Model (SFM) pedestrian plugins for **Gazebo Harmonic (gz-sim8)** and
-**ROS 2 Jazzy**, with LiDAR-detectable collisions.
+Social Force Model (SFM) pedestrian plugins for **Gazebo Ignition** and **ROS 2**, with LiDAR-detectable collisions. The persons are affected by the obstacles and other persons using the [Social Force Model](https://github.com/robotics-upo/lightsfm).
 
+
+
+> [!NOTE]
 > Originally written for Gazebo Classic (Gazebo 11) + ROS 2 Humble, this package has
 > been ported to the new Gazebo (gz-sim) architecture. The actor is driven through
 > the `TrajectoryPose` / `AnimationTime` components of a `gz::sim::System` plugin.
@@ -21,9 +23,6 @@ Social Force Model (SFM) pedestrian plugins for **Gazebo Harmonic (gz-sim8)** an
 | ROS 2 | Jazzy Jalisco |
 | Gazebo | Harmonic (`gz-sim` 8) |
 | OS | Ubuntu 24.04 (Noble) |
-
-> This package targets the new Gazebo (`gz-sim`), not Gazebo Classic (Gazebo 11).
-> Other ROS 2 / Gazebo combinations are not supported.
 
 ## Quick Start
 
@@ -223,7 +222,7 @@ the cylinders don't repel each other or their own actor:
 </ignore_obstacles>
 ```
 
-### 3. Rebuild and run
+### 3. Build and run
 
 ```bash
 cd ~/dev_ws
